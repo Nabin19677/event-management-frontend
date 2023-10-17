@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { REGISTER_MUTATION } from '@/app/graphql/user';
+import { REGISTER_MUTATION } from '@/graphql/user';
 import Link from "next/link";
 
 export default function SignupPage() {

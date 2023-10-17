@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@apollo/client";
-import { ORGANIZER_EVENTS_QUERY } from "../graphql/event";
-import Link from "next/link"
+import { ORGANIZER_EVENTS_QUERY } from "../../graphql/event";
+import Link from "next/link";
 
 export default function DashboardPage() {
   const { loading, error, data } = useQuery(ORGANIZER_EVENTS_QUERY);
@@ -47,7 +47,8 @@ export default function DashboardPage() {
               <tr key={idx}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <Link
-                    href={"/event"}
+                    href="/event/[id]"
+                    as={`/event/${item.eventId}`}
                     className="text-blue-500 hover:underline hover:text-blue-700"
                   >
                     {item.name}

@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import { CREATE_EVENT_MUTATION } from "../graphql/event";
+import { CREATE_EVENT_MUTATION } from "../../graphql/event";
 
 export default function SignupPage() {
   const router = useRouter();

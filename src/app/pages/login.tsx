@@ -2,16 +2,8 @@
 
 import { FormEvent, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
+import { LOGIN_MUTATION } from '@/app/graphql/user';
 
-const LOGIN_MUTATION = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(input : {email: $email, password: $password}) {
-      authToken {
-        accessToken
-      }
-    }
-  }
-`;
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -25,11 +17,8 @@ export default function LoginPage() {
     try {
       const { data } = await login({ variables: { email, password } });
 
-      // Assuming your API returns a token upon successful login
-      if (data.login.token) {
-        // Store the token in a secure way, such as in a cookie or local storage.
-        // You can use a state management library for this as well.
-        // Then, redirect to the dashboard or any protected page.
+      if (data.login.authToken.accessToken) {
+        localStorage.setItem("TOKEN", data.login.authToken.accessToken)
       }
     } catch (error) {
       console.error('Login failed:', error);

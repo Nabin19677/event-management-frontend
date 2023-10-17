@@ -1,18 +1,9 @@
 "use client"; 
 
 import { FormEvent, useState } from 'react';
-import { useMutation, gql } from '@apollo/client';
+import { useMutation } from '@apollo/client';
+import { REGISTER_MUTATION } from '@/app/graphql/user';
 
-const REGISTER_MUTATION = gql`
-  mutation Register($name: String!, $email: String!, $phoneNumber: String!, $password: String!) {
-    createUser(input : {
-        name : $name,
-        email : $email,
-        phoneNumber : $phoneNumber,
-        password : $password
-    })
-  }
-`;
 
 export default function SignupPage() {
   const [name, setName] = useState('');

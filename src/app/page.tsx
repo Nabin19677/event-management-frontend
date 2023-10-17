@@ -1,14 +1,9 @@
 "use client"; 
 
-import LoginPage from "./pages/login";
-import { ApolloProvider } from "@apollo/client";
-import client from "@/lib/apollo";
-import SignupPage from "./pages/signup";
+import LoginPage from "@/app/login/page";
 
 export default function Home() {
   return (
-    <ApolloProvider client={client}>
-      <SignupPage />
-    </ApolloProvider>
+      <LoginPage />
   );
 }

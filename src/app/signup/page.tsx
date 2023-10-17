@@ -1,18 +1,9 @@
 "use client"; 
 
 import { FormEvent, useState } from 'react';
-import { useMutation, gql } from '@apollo/client';
-
-const REGISTER_MUTATION = gql`
-  mutation Register($name: String!, $email: String!, $phoneNumber: String!, $password: String!) {
-    createUser(input : {
-        name : $name,
-        email : $email,
-        phoneNumber : $phoneNumber,
-        password : $password
-    })
-  }
-`;
+import { useMutation } from '@apollo/client';
+import { REGISTER_MUTATION } from '@/app/graphql/user';
+import Link from "next/link";
 
 export default function SignupPage() {
   const [name, setName] = useState('');
@@ -20,21 +11,15 @@ export default function SignupPage() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
 
-  const [login, { loading, error }] = useMutation(REGISTER_MUTATION);
+  const [register, { loading, error }] = useMutation(REGISTER_MUTATION);
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
-      const { data } = await login({ variables: { name, email, phoneNumber, password } });
+      // await register({ variables: { name, email, phoneNumber, password } });
+      const  {data} =  await register({ variables: { name, email, phoneNumber, password } })
 
-      // Assuming your API returns a token upon successful login
-      if (data.login.token) {
-        // Store the token in a secure way, such as in a cookie or local storage.
-        // You can use a state management library for this as well.
-        // Then, redirect to the dashboard or any protected page.
-      }
-    } catch (error) {
+    } catch (error : any) {
       console.error('Register failed:', error);
     }
   };
@@ -88,6 +73,10 @@ export default function SignupPage() {
         </button>
         {error && <p className="mt-2 text-red-500"> Unable to register user : {error.message }</p>}
       </form>
+
+      <button className="w-full py-2 px-4 text-white bg-green-500 rounded focus:outline-none">
+        <Link href="/login">Login</Link>
+      </button>
     </div>
   );
 }

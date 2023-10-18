@@ -42,3 +42,12 @@ export const GET_EVENT_DETAIL_QUERY = gql`
     }
   }
 `;
+
+export const GET_EVENT_ROLES_QUERY = gql`
+query GetEventRoles {
+    events_roles {
+      roleId
+      roleName
+    }
+  }
+`;

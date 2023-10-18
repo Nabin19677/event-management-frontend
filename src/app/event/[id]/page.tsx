@@ -8,7 +8,7 @@ import Organizers from "./organizers";
 export default function EventDetailPage({ params }: any) {
   const { id } = params;
 
-  const { loading, error, data  } = useQuery(GET_EVENT_DETAIL_QUERY, {
+  const { loading, error, data } = useQuery(GET_EVENT_DETAIL_QUERY, {
     variables: {
       eventId: id,
     },
@@ -33,18 +33,27 @@ export default function EventDetailPage({ params }: any) {
               />
             </div>
             <div className="max-w-xl px-4 space-y-3 mt-6 sm:px-0 md:mt-0 lg:max-w-2xl">
-              <h3 className="text-indigo-600 font-semibold">
-                {detail.event.location}
-              </h3>
+              <div className="text-left">
+                <h3 className="text-indigo-600 font-semibold">
+                  {detail.event.location}
+                  {(detail.role === "Admin" ||
+                    detail.role === "Contributor") && (
+                    <Link
+                      href="/event/[id]/edit"
+                      as={`/event/${id}/edit`}
+                      className="text-blue-500 hover:underline hover:text-blue-700 ml-4"
+                    >
+                      Edit
+                    </Link>
+                  )}
+                </h3>
+              </div>
+
               <p className="text-gray-800 text-3xl font-semibold sm:text-4xl">
                 {detail.event.name}
               </p>
               <p className="mt-3 text-gray-600">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                cupidatat non proident, sunt in culpa qui officia deserunt
-                mollit anim id est laborum, sed ut perspiciatis unde omnis iste
-                natus error sit voluptatem accusantium doloremque laudantium
+                {detail.event.description}
               </p>
               <a
                 href="javascript:void(0)"
@@ -68,10 +77,8 @@ export default function EventDetailPage({ params }: any) {
           </div>
         </div>
       </section>
-   
-      {
-        detail.role === "Admin" && <Organizers eventId={id}/>
-      }
+
+      {detail.role === "Admin" && <Organizers eventId={id} />}
     </>
   );
 }

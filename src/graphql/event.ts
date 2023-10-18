@@ -26,13 +26,27 @@ export const CREATE_EVENT_MUTATION = gql`
   }
 `;
 
+export const UPDATE_EVENT_MUTATION = gql`
+  mutation UpdateEvent($eventId: Int!, $startDate: String!, $endDate: String!, $location: String!,  $description: String!) {
+    updateEvent(eventId: $eventId, input : {
+        startDate : $startDate,
+        endDate : $endDate,
+        location : $location,
+        description : $description
+    })
+  }
+`;
+
 export const GET_EVENT_DETAIL_QUERY = gql`
   query GetEventDetail($eventId: Int!) {
     getEventDetail(eventId : $eventId){
       event {
         eventId,
         name,
-        location
+        location,
+        startDate,
+        endDate,
+        description
       },
       sessions {
         sessionId,

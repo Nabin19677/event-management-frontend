@@ -1,31 +1,52 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useMutation } from "@apollo/client";
+import { FormEvent, useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import { CREATE_EVENT_MUTATION } from "../../graphql/event";
+import { GET_EVENT_DETAIL_QUERY, UPDATE_EVENT_MUTATION } from "@/graphql/event";
 
-export default function CreateEventPage() {
+export default function UpdateEventPage({ params }: any) {
+  const { id } = params;
+
   const router = useRouter();
 
-  const [name, setName] = useState("");
+  const { loading: eventDetailLoading, data : eventDetail } = useQuery(GET_EVENT_DETAIL_QUERY, {
+    variables: {
+      eventId: id,
+    },
+  });
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
-  const [createEvent, { loading, error }] = useMutation(CREATE_EVENT_MUTATION);
+  const [updateEvent, { loading, error }] = useMutation(UPDATE_EVENT_MUTATION);
+
+
+  useEffect(() => {
+    if (!eventDetailLoading && eventDetail) {
+      const { startDate, endDate, location, description } = eventDetail.getEventDetail.event;
+      const formattedStartDate = new Date(startDate).toISOString().split('T')[0];
+      setStartDate(formattedStartDate);
+      const formattedEndDate = new Date(endDate).toISOString().split('T')[0];
+      setEndDate(formattedEndDate);
+      setLocation(location);
+      setDescription(description);
+    }
+  }, [eventDetailLoading, eventDetail]);
+
+
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      // await register({ variables: { name, email, phoneNumber, password } });
-      const { data } = await createEvent({
-        variables: { name, startDate, endDate, location, description },
+      const { data } = await updateEvent({
+        variables: { eventId : id, startDate, endDate, location, description },
       });
 
-      if (data.createEvent) {
-        router.push("/dashboard")
+      if (data.updateEvent) {
+        router.push(`/event/${id}`)
       }
     } catch (error: any) {
       console.error("Create Event failed:", error);
@@ -34,23 +55,8 @@ export default function CreateEventPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold">Create Event</h1>
+      <h1 className="text-2xl font-bold">Update Event</h1>
       <form onSubmit={handleSubmit} className="mt-4">
-        <div className="mb-4">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Name:
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-          />
-        </div>
         <div className="mb-4">
         <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
           Start Date:
@@ -114,7 +120,6 @@ export default function CreateEventPage() {
         </button>
         {error && (
           <p className="mt-2 text-red-500">
-            {" "}
             Unable to register user : {error.message}
           </p>
         )}

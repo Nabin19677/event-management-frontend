@@ -3,6 +3,7 @@
 import { useQuery } from "@apollo/client";
 import { ORGANIZER_EVENTS_QUERY } from "../../graphql/event";
 import Link from "next/link";
+import moment from "moment";
 
 export default function DashboardPage() {
   const { loading, error, data } = useQuery(ORGANIZER_EVENTS_QUERY);
@@ -56,9 +57,11 @@ export default function DashboardPage() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">{item.location}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {item.startDate}
+                  {moment(item.startDate).format("LL")}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{item.endDate}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {moment(item.endDate).format("LL")}
+                </td>
               </tr>
             ))}
           </tbody>

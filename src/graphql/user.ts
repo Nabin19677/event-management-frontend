@@ -26,7 +26,9 @@ export const GET_USERS_QUERY = gql`
 query GetUsers {
     users {
       userId
-      name
+      name,
+      email,
+      phoneNumber
     }
   }
 `;

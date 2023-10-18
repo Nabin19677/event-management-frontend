@@ -5,9 +5,13 @@ import { GET_EVENT_DETAIL_QUERY } from "@/graphql/event";
 import Link from "next/link";
 import Organizers from "./organizers";
 import Sessions from "./sessions";
+import { useState } from "react";
+import InviteModal from "@/components/modals/invite";
 
 export default function EventDetailPage({ params }: any) {
   const { id } = params;
+
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const { loading, error, data } = useQuery(GET_EVENT_DETAIL_QUERY, {
     variables: {
@@ -47,13 +51,14 @@ export default function EventDetailPage({ params }: any) {
                     </Link>
                   )}
                   {detail.role === "Contributor" && (
-                    <Link
-                      href="/event/[id]/edit"
-                      as={`/event/${id}/edit`}
-                      className="text-blue-500 hover:underline hover:text-blue-700 ml-4"
-                    >
-                      Invite
-                    </Link>
+                     <button
+                     onClick={() => {
+                      setIsInviteModalOpen(true)
+                     }}
+                     className="hover:text-blue-600 cursor-pointer ml-4"
+                   >
+                     Invite
+                   </button>
                   )}
                 </h3>
               </div>
@@ -62,24 +67,7 @@ export default function EventDetailPage({ params }: any) {
                 {detail.event.name}
               </p>
               <p className="mt-3 text-gray-600">{detail.event.description}</p>
-              <a
-                href="javascript:void(0)"
-                className="inline-flex gap-x-1 items-center text-indigo-600 hover:text-indigo-500 duration-150 font-medium"
-              >
-                Learn more
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </a>
+             
             </div>
           </div>
         </div>
@@ -88,6 +76,12 @@ export default function EventDetailPage({ params }: any) {
       {detail.role === "Admin" && <Organizers eventId={id} />}
 
       <Sessions eventId={id} role={detail.role}/>
+
+      <InviteModal
+        isOpen={isInviteModalOpen}
+        onRequestClose={() => setIsInviteModalOpen(false)}
+        eventId={id}
+      />
     </>
   );
 }

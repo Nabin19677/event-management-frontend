@@ -1,17 +1,14 @@
-
 import { GET_EVENT_SESSIONS_BY_EVENT_QUERY } from "@/graphql/event_session";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
+import moment from "moment";
 
 export default function Sessions({ eventId, role }: any) {
-  const { loading, error, data } = useQuery(
-    GET_EVENT_SESSIONS_BY_EVENT_QUERY,
-    {
-      variables: {
-        eventId,
-      },
-    }
-  );
+  const { loading, error, data } = useQuery(GET_EVENT_SESSIONS_BY_EVENT_QUERY, {
+    variables: {
+      eventId,
+    },
+  });
 
   if (loading) {
     return <>Loading...</>;
@@ -49,14 +46,12 @@ export default function Sessions({ eventId, role }: any) {
             <tbody className="text-gray-600 divide-y">
               {data?.getEventSessions?.map((item: any, idx: any) => (
                 <tr key={idx}>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {item.name}
+                    {moment(item.startTime).format("LLL")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {item.startTime}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {item.endTime}
+                    {moment(item.endTime).format("LLL")}
                   </td>
                 </tr>
               ))}

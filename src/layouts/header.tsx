@@ -6,12 +6,6 @@ import { useApolloClient } from '@apollo/client';
 const Header = () => {
   const router = useRouter();
   const client = useApolloClient();
-  const navigation = [
-    { title: 'Home', path: '/' },
-    { title: 'About', path: '/about' },
-    { title: 'Services', path: '/services' },
-    { title: 'Contact', path: '/contact' },
-  ];
 
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
@@ -32,11 +26,6 @@ const Header = () => {
           Your Logo
         </Link>
         <nav className="space-x-4">
-          {navigation.map((item, idx) => (
-            <Link key={idx} href={item.path}>
-            {item.title}
-            </Link>
-          ))}
           <div className="relative group">
             <button
               onClick={toggleProfileDropdown}
@@ -45,7 +34,7 @@ const Header = () => {
               Profile
             </button>
             {profileDropdownOpen && (
-              <div className="absolute top-10 right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg">
+              <div className="absolute top-10 right-0 mt-2 w-40 bg-black border rounded-lg shadow-lg">
                 <ul className="p-2 space-y-2">
                   <li>
                     <Link href="/profile">

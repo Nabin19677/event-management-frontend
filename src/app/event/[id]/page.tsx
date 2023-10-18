@@ -23,6 +23,11 @@ export default function EventDetailPage({ params }: any) {
     return <>Loading...</>;
   }
 
+
+  if (!data || !data.getEventDetail) {
+    return <div>Not invited to this event.</div>;
+  }
+
   const { getEventDetail: detail } = data;
 
   return (

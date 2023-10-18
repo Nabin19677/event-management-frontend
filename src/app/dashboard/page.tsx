@@ -43,7 +43,7 @@ export default function DashboardPage() {
             </tr>
           </thead>
           <tbody className="text-gray-600 divide-y">
-            {data.organized_events.map((item: any, idx: any) => (
+            {data.organized_events?.map((item: any, idx: any) => (
               <tr key={idx}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <Link

@@ -47,8 +47,10 @@ export default function AddOrganizer({ params }: any) {
             id="user"
             value={user}
             onChange={(e) => setUser(e.target.value)}
+            defaultValue={""}
             className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
           >
+             <option value="">Select a user</option>
             {usersQueryData?.users.map((user : any) => (
               <option key={user.userId} value={user.userId}>
                 {user.name}
@@ -67,9 +69,11 @@ export default function AddOrganizer({ params }: any) {
           <select
             id="role"
             value={role}
+            defaultValue={""}
             onChange={(e) => setRole(e.target.value)}
             className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
           >
+            <option value="">Select a role</option>
             {eventRolesQueryData?.events_roles.map((user : any) => (
               <option key={user.roleId} value={user.roleId}>
                 {user.roleName}
@@ -87,7 +91,7 @@ export default function AddOrganizer({ params }: any) {
         </button>
         {createEventOrganizerError && (
           <p className="mt-2 text-red-500">
-            Unable to user as organizer : {createEventOrganizerError.message}
+            Unable to add user as organizer : {createEventOrganizerError.message}
           </p>
         )}
       </form>

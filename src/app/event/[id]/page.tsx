@@ -36,8 +36,7 @@ export default function EventDetailPage({ params }: any) {
               <div className="text-left">
                 <h3 className="text-indigo-600 font-semibold">
                   {detail.event.location}
-                  {(detail.role === "Admin" ||
-                    detail.role === "Contributor") && (
+                  {detail.role === "Admin" && (
                     <Link
                       href="/event/[id]/edit"
                       as={`/event/${id}/edit`}
@@ -46,15 +45,22 @@ export default function EventDetailPage({ params }: any) {
                       Edit
                     </Link>
                   )}
+                  {detail.role === "Contributor" && (
+                    <Link
+                      href="/event/[id]/edit"
+                      as={`/event/${id}/edit`}
+                      className="text-blue-500 hover:underline hover:text-blue-700 ml-4"
+                    >
+                      Invite
+                    </Link>
+                  )}
                 </h3>
               </div>
 
               <p className="text-gray-800 text-3xl font-semibold sm:text-4xl">
                 {detail.event.name}
               </p>
-              <p className="mt-3 text-gray-600">
-                {detail.event.description}
-              </p>
+              <p className="mt-3 text-gray-600">{detail.event.description}</p>
               <a
                 href="javascript:void(0)"
                 className="inline-flex gap-x-1 items-center text-indigo-600 hover:text-indigo-500 duration-150 font-medium"

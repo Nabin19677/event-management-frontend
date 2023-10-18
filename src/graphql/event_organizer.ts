@@ -9,6 +9,15 @@ export const CREATE_EVENT_ORGANIZER_MUTATION = gql`
   }
 `;
 
+export const DELETE_EVENT_ORGANIZER_MUTATION = gql`
+  mutation DeleteEventOrganizer($eventId: Int!, $eventOrganizerId: Int!) {
+    deleteEventOrganizer(
+      eventId: $eventId
+      eventOrganizerId: $eventOrganizerId
+    )
+  }
+`;
+
 export const GET_EVENT_ORGANIZERS_BY_EVENT_QUERY = gql`
   query GetEventOrganizersByEvent($eventId: Int!) {
     getEventOrganizers(eventId: $eventId) {

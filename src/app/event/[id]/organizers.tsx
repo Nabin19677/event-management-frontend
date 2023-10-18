@@ -1,9 +1,14 @@
-
-import { GET_EVENT_ORGANIZERS_BY_EVENT_QUERY } from "@/graphql/event_organizer";
-import { useQuery } from "@apollo/client";
+import {
+  DELETE_EVENT_ORGANIZER_MUTATION,
+  GET_EVENT_ORGANIZERS_BY_EVENT_QUERY,
+} from "@/graphql/event_organizer";
+import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Organizers({ eventId }: any) {
+  const router = useRouter();
+
   const { loading, error, data } = useQuery(
     GET_EVENT_ORGANIZERS_BY_EVENT_QUERY,
     {
@@ -13,9 +18,29 @@ export default function Organizers({ eventId }: any) {
     }
   );
 
+  const [
+    deleteOrganizer,
+    { loading: deleteEventOrganizerLoading, error: deleteEventOrganizerError },
+  ] = useMutation(DELETE_EVENT_ORGANIZER_MUTATION);
+
   if (loading) {
     return <>Loading...</>;
   }
+
+  const handleDeleteOrganizer = async (eventOrganizerId: number) => {
+    console.log(eventOrganizerId);
+    try {
+      const { data } = await deleteOrganizer({
+        variables: { eventId, eventOrganizerId },
+      });
+
+      if(data) {
+        router.push(`/event/${eventId}`)
+      }
+    } catch (error: any) {
+      console.error("Register failed:", error);
+    }
+  };
 
   return (
     <section className="py-14">
@@ -41,6 +66,7 @@ export default function Organizers({ eventId }: any) {
               <tr>
                 <th className="py-3 px-6">User Name</th>
                 <th className="py-3 px-6">Role</th>
+                <th className="py-3 px-6">Actions</th>
               </tr>
             </thead>
             <tbody className="text-gray-600 divide-y">
@@ -51,6 +77,17 @@ export default function Organizers({ eventId }: any) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {item.roleId.roleName}
+                  </td>
+                  <td>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleDeleteOrganizer(item.eventOrganizerId);
+                      }}
+                      className="hover:text-blue-600 cursor-pointer"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}

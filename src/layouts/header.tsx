@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from "next/navigation";
+import { useApolloClient } from '@apollo/client';
 
 const Header = () => {
   const router = useRouter();
+  const client = useApolloClient();
   const navigation = [
     { title: 'Home', path: '/' },
     { title: 'About', path: '/about' },
@@ -20,6 +22,7 @@ const Header = () => {
   const handleLogout = () => {
     router.push("/");
     localStorage.clear()
+    client.clearStore();
   };
 
   return (

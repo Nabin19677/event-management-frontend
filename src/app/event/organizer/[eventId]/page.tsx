@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_EVENT_ORGANIZER_MUTATION } from "@/graphql/event_organizer";
@@ -7,6 +8,8 @@ import { GET_USERS_QUERY } from "@/graphql/user";
 import { GET_EVENT_ROLES_QUERY } from "@/graphql/event";
 
 export default function AddOrganizer({ params }: any) {
+  const router = useRouter();
+
   const { eventId } = params;
   const [user, setUser] = useState("");
   const [role, setRole] = useState("");
@@ -27,6 +30,10 @@ export default function AddOrganizer({ params }: any) {
       const { data } = await addOrganizer({
         variables: { eventId, userId: user, roleId: role },
       });
+
+      if(data) {
+        router.push(`/event/${eventId}`)
+      }
     } catch (error: any) {
       console.error("Register failed:", error);
     }

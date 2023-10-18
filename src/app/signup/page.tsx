@@ -1,11 +1,14 @@
 "use client"; 
 
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { REGISTER_MUTATION } from '@/graphql/user';
 import Link from "next/link";
 
 export default function SignupPage() {
+  const router = useRouter();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -19,6 +22,9 @@ export default function SignupPage() {
       // await register({ variables: { name, email, phoneNumber, password } });
       const  {data} =  await register({ variables: { name, email, phoneNumber, password } })
 
+      if (data) {
+        router.push("/login");
+      }
     } catch (error : any) {
       console.error('Register failed:', error);
     }

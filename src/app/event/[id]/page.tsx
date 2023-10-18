@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GET_EVENT_DETAIL_QUERY } from "@/graphql/event";
 import Link from "next/link";
 import Organizers from "./organizers";
+import Sessions from "./sessions";
 
 export default function EventDetailPage({ params }: any) {
   const { id } = params;
@@ -85,6 +86,8 @@ export default function EventDetailPage({ params }: any) {
       </section>
 
       {detail.role === "Admin" && <Organizers eventId={id} />}
+
+      <Sessions eventId={id} role={detail.role}/>
     </>
   );
 }

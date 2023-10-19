@@ -3,7 +3,10 @@
 import { FormEvent, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import { CREATE_EVENT_MUTATION } from "../../graphql/event";
+import {
+  CREATE_EVENT_MUTATION,
+  ORGANIZER_EVENTS_QUERY,
+} from "../../graphql/event";
 
 export default function CreateEventPage() {
   const router = useRouter();
@@ -14,7 +17,13 @@ export default function CreateEventPage() {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
-  const [createEvent, { loading, error }] = useMutation(CREATE_EVENT_MUTATION);
+  const [createEvent, { loading, error }] = useMutation(CREATE_EVENT_MUTATION, {
+    refetchQueries: [
+      {
+        query: ORGANIZER_EVENTS_QUERY,
+      },
+    ],
+  });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,7 +34,7 @@ export default function CreateEventPage() {
       });
 
       if (data.createEvent) {
-        router.push("/dashboard")
+        router.push("/dashboard");
       }
     } catch (error: any) {
       console.error("Create Event failed:", error);
@@ -52,29 +61,35 @@ export default function CreateEventPage() {
           />
         </div>
         <div className="mb-4">
-        <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
-          Start Date:
-        </label>
-        <input
-          type="date"
-          id="startDate"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-        />
-      </div>
+          <label
+            htmlFor="startDate"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Start Date:
+          </label>
+          <input
+            type="date"
+            id="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
         <div className="mb-4">
-        <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
-          End Date:
-        </label>
-        <input
-          type="date"
-          id="endDate"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-        />
-      </div>
+          <label
+            htmlFor="endDate"
+            className="block text-sm font-medium text-gray-700"
+          >
+            End Date:
+          </label>
+          <input
+            type="date"
+            id="endDate"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
         <div className="mb-4">
           <label
             htmlFor="location"
@@ -114,8 +129,7 @@ export default function CreateEventPage() {
         </button>
         {error && (
           <p className="mt-2 text-red-500">
-            {" "}
-            Unable to register user : {error.message}
+            Unable to create event : {error.message}
           </p>
         )}
       </form>

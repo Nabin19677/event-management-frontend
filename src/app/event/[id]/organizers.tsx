@@ -21,7 +21,16 @@ export default function Organizers({ eventId }: any) {
   const [
     deleteOrganizer,
     { loading: deleteEventOrganizerLoading, error: deleteEventOrganizerError },
-  ] = useMutation(DELETE_EVENT_ORGANIZER_MUTATION);
+  ] = useMutation(DELETE_EVENT_ORGANIZER_MUTATION, {
+    refetchQueries : [
+      {
+        query : GET_EVENT_ORGANIZERS_BY_EVENT_QUERY,
+        variables: {
+          eventId,
+        },
+      }
+    ]
+  });
 
   if (loading) {
     return <>Loading...</>;

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 import Link from "next/link";
-import { LOGIN_MUTATION } from "@/app/graphql/user";
+import { LOGIN_MUTATION } from "@/graphql/user";
 
 export default function LoginPage() {
   const router = useRouter();

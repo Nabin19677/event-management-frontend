@@ -11,15 +11,18 @@
   "dependencies": {
     "@apollo/client": "^3.8.6",
     "graphql": "^16.8.1",
+    "moment": "^2.29.4",
     "next": "13.5.5",
     "next-auth": "^4.23.2",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-modal": "^3.16.1"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-modal": "^3.16.1",
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "13.5.5",

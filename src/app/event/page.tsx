@@ -3,9 +3,12 @@
 import { FormEvent, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import { CREATE_EVENT_MUTATION } from "../graphql/event";
+import {
+  CREATE_EVENT_MUTATION,
+  ORGANIZER_EVENTS_QUERY,
+} from "../../graphql/event";
 
-export default function SignupPage() {
+export default function CreateEventPage() {
   const router = useRouter();
 
   const [name, setName] = useState("");
@@ -14,9 +17,15 @@ export default function SignupPage() {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
-  const [createEvent, { loading, error }] = useMutation(CREATE_EVENT_MUTATION);
+  const [createEvent, { loading, error }] = useMutation(CREATE_EVENT_MUTATION, {
+    refetchQueries: [
+      {
+        query: ORGANIZER_EVENTS_QUERY,
+      },
+    ],
+  });
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       // await register({ variables: { name, email, phoneNumber, password } });
@@ -25,7 +34,7 @@ export default function SignupPage() {
       });
 
       if (data.createEvent) {
-        router.push("/dashboard")
+        router.push("/dashboard");
       }
     } catch (error: any) {
       console.error("Create Event failed:", error);
@@ -35,7 +44,7 @@ export default function SignupPage() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold">Create Event</h1>
-      <form onSubmit={handleLogin} className="mt-4">
+      <form onSubmit={handleSubmit} className="mt-4">
         <div className="mb-4">
           <label
             htmlFor="name"
@@ -59,7 +68,7 @@ export default function SignupPage() {
             Start Date:
           </label>
           <input
-            type="text"
+            type="date"
             id="startDate"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
@@ -74,7 +83,7 @@ export default function SignupPage() {
             End Date:
           </label>
           <input
-            type="text"
+            type="date"
             id="endDate"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
@@ -120,8 +129,7 @@ export default function SignupPage() {
         </button>
         {error && (
           <p className="mt-2 text-red-500">
-            {" "}
-            Unable to register user : {error.message}
+            Unable to create event : {error.message}
           </p>
         )}
       </form>

@@ -21,7 +21,16 @@ export default function UpdateEventPage({ params }: any) {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
-  const [updateEvent, { loading, error }] = useMutation(UPDATE_EVENT_MUTATION);
+  const [updateEvent, { loading, error }] = useMutation(UPDATE_EVENT_MUTATION, {
+    refetchQueries : [
+      {
+        query : GET_EVENT_DETAIL_QUERY,
+        variables : {
+          eventId : id
+        }
+      }
+    ]
+  });
 
 
   useEffect(() => {
@@ -120,7 +129,7 @@ export default function UpdateEventPage({ params }: any) {
         </button>
         {error && (
           <p className="mt-2 text-red-500">
-            Unable to register user : {error.message}
+            Unable to update event : {error.message}
           </p>
         )}
       </form>

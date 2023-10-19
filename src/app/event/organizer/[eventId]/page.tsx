@@ -3,7 +3,10 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { CREATE_EVENT_ORGANIZER_MUTATION } from "@/graphql/event_organizer";
+import {
+  CREATE_EVENT_ORGANIZER_MUTATION,
+  GET_EVENT_ORGANIZERS_BY_EVENT_QUERY,
+} from "@/graphql/event_organizer";
 import { GET_USERS_QUERY } from "@/graphql/user";
 import { GET_EVENT_ROLES_QUERY } from "@/graphql/event";
 
@@ -17,12 +20,21 @@ export default function AddOrganizer({ params }: any) {
   const [
     addOrganizer,
     { loading: createEventOrganizerLoading, error: createEventOrganizerError },
-  ] = useMutation(CREATE_EVENT_ORGANIZER_MUTATION);
+  ] = useMutation(CREATE_EVENT_ORGANIZER_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_EVENT_ORGANIZERS_BY_EVENT_QUERY,
+        variables: {
+          eventId,
+        },
+      },
+    ],
+  });
   const { loading: userLoading, data: usersQueryData } =
     useQuery(GET_USERS_QUERY);
-  const { loading: eventRolesLoading, data: eventRolesQueryData } =
-    useQuery(GET_EVENT_ROLES_QUERY);
-
+  const { loading: eventRolesLoading, data: eventRolesQueryData } = useQuery(
+    GET_EVENT_ROLES_QUERY
+  );
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,8 +43,8 @@ export default function AddOrganizer({ params }: any) {
         variables: { eventId, userId: user, roleId: role },
       });
 
-      if(data) {
-        router.push(`/event/${eventId}`)
+      if (data) {
+        router.push(`/event/${eventId}`);
       }
     } catch (error: any) {
       console.error("Register failed:", error);
@@ -57,8 +69,8 @@ export default function AddOrganizer({ params }: any) {
             defaultValue={""}
             className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
           >
-             <option value="">Select a user</option>
-            {usersQueryData?.users.map((user : any) => (
+            <option value="">Select a user</option>
+            {usersQueryData?.users.map((user: any) => (
               <option key={user.userId} value={user.userId}>
                 {user.name}
               </option>
@@ -81,14 +93,14 @@ export default function AddOrganizer({ params }: any) {
             className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
           >
             <option value="">Select a role</option>
-            {eventRolesQueryData?.events_roles.map((user : any) => (
+            {eventRolesQueryData?.events_roles.map((user: any) => (
               <option key={user.roleId} value={user.roleId}>
                 {user.roleName}
               </option>
             ))}
           </select>
         </div>
-      
+
         <button
           type="submit"
           disabled={createEventOrganizerLoading}
@@ -98,7 +110,8 @@ export default function AddOrganizer({ params }: any) {
         </button>
         {createEventOrganizerError && (
           <p className="mt-2 text-red-500">
-            Unable to add user as organizer : {createEventOrganizerError.message}
+            Unable to add user as organizer :{" "}
+            {createEventOrganizerError.message}
           </p>
         )}
       </form>

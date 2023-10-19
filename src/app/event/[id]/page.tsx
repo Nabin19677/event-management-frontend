@@ -8,6 +8,7 @@ import Sessions from "./sessions";
 import { useState } from "react";
 import InviteModal from "@/components/modals/invite";
 import Expenses from "./expenses";
+import Attendees from "./attendees";
 
 export default function EventDetailPage({ params }: any) {
   const { id } = params;
@@ -83,6 +84,10 @@ export default function EventDetailPage({ params }: any) {
 
       {["Admin", "Contributor"].includes(detail.role) && (
         <Expenses eventId={id} role={detail.role} />
+      )}
+
+      {["Admin", "Contributor"].includes(detail.role) && (
+        <Attendees eventId={id} role={detail.role} />
       )}
 
       <InviteModal

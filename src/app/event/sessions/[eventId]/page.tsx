@@ -3,7 +3,10 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { CREATE_EVENT_SESSION_MUTATION } from "@/graphql/event_session";
+import {
+  CREATE_EVENT_SESSION_MUTATION,
+  GET_EVENT_SESSIONS_BY_EVENT_QUERY,
+} from "@/graphql/event_session";
 
 export default function AddSessionPage({ params }: any) {
   const router = useRouter();
@@ -16,7 +19,16 @@ export default function AddSessionPage({ params }: any) {
   const [
     addSession,
     { loading: createEventSessionLoading, error: createEventSessionError },
-  ] = useMutation(CREATE_EVENT_SESSION_MUTATION);
+  ] = useMutation(CREATE_EVENT_SESSION_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_EVENT_SESSIONS_BY_EVENT_QUERY,
+        variables: {
+          eventId,
+        },
+      },
+    ],
+  });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -94,8 +106,7 @@ export default function AddSessionPage({ params }: any) {
         </button>
         {createEventSessionError && (
           <p className="mt-2 text-red-500">
-            Unable to add user as organizer :{" "}
-            {createEventSessionError.message}
+            Unable to add user as organizer : {createEventSessionError.message}
           </p>
         )}
       </form>

@@ -9,6 +9,7 @@ import {
 } from "@/graphql/event_organizer";
 import { GET_USERS_QUERY } from "@/graphql/user";
 import { GET_EVENT_ROLES_QUERY } from "@/graphql/event";
+import { GET_EVENT_ATTENDEES_BY_EVENT_QUERY } from "@/graphql/event_attendee";
 
 export default function AddOrganizer({ params }: any) {
   const router = useRouter();
@@ -24,6 +25,12 @@ export default function AddOrganizer({ params }: any) {
     refetchQueries: [
       {
         query: GET_EVENT_ORGANIZERS_BY_EVENT_QUERY,
+        variables: {
+          eventId,
+        },
+      },
+      {
+        query: GET_EVENT_ATTENDEES_BY_EVENT_QUERY,
         variables: {
           eventId,
         },

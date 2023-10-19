@@ -3,7 +3,11 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { ADD_EVENT_EXPENSE_MUTATION, GET_EVENT_EXPENSES_CATEGORIES_QUERY } from "@/graphql/event_organizer";
+import {
+  ADD_EVENT_EXPENSE_MUTATION,
+  GET_EVENT_EXPENSES_BY_CATEGORY_QUERY,
+  GET_EVENT_EXPENSES_CATEGORIES_QUERY,
+} from "@/graphql/event_organizer";
 
 export default function AddExpenses({ params }: any) {
   const router = useRouter();
@@ -17,20 +21,35 @@ export default function AddExpenses({ params }: any) {
   const [
     addExpense,
     { loading: createEventExpenseLoading, error: createEventExpenseError },
-  ] = useMutation(ADD_EVENT_EXPENSE_MUTATION);
-  const { loading: categoriesLoading, data: categoriesData } =
-    useQuery(GET_EVENT_EXPENSES_CATEGORIES_QUERY);
-
+  ] = useMutation(ADD_EVENT_EXPENSE_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_EVENT_EXPENSES_BY_CATEGORY_QUERY,
+        variables: {
+          eventId,
+        },
+      },
+    ],
+  });
+  const { loading: categoriesLoading, data: categoriesData } = useQuery(
+    GET_EVENT_EXPENSES_CATEGORIES_QUERY
+  );
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const { data } = await addExpense({
-        variables: { eventId, itemName, cost, description, categoryId: category  },
+        variables: {
+          eventId,
+          itemName,
+          cost,
+          description,
+          categoryId: category,
+        },
       });
 
-      if(data) {
-        router.push(`/event/${eventId}`)
+      if (data) {
+        router.push(`/event/${eventId}`);
       }
     } catch (error: any) {
       console.error("Register failed:", error);
@@ -41,8 +60,13 @@ export default function AddExpenses({ params }: any) {
     <div className="p-4">
       <h1 className="text-2xl font-bold">Add New Expense</h1>
       <form onSubmit={handleSubmit} className="mt-4">
-      <div className="mb-4">
-          <label htmlFor="itemName" className="block text-sm font-medium text-gray-700">Item Name:</label>
+        <div className="mb-4">
+          <label
+            htmlFor="itemName"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Item Name:
+          </label>
           <input
             type="text"
             id="itemName"
@@ -51,8 +75,13 @@ export default function AddExpenses({ params }: any) {
             className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
           />
         </div>
-      <div className="mb-4">
-          <label htmlFor="cost" className="block text-sm font-medium text-gray-700">Cost:</label>
+        <div className="mb-4">
+          <label
+            htmlFor="cost"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Cost:
+          </label>
           <input
             type="number"
             id="cost"
@@ -61,8 +90,13 @@ export default function AddExpenses({ params }: any) {
             className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
           />
         </div>
-      <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description:</label>
+        <div className="mb-4">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Description:
+          </label>
           <input
             type="text"
             id="description"
@@ -85,8 +119,8 @@ export default function AddExpenses({ params }: any) {
             defaultValue={""}
             className="block w-full mt-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
           >
-             <option value="">Select a Category</option>
-            {categoriesData?.events_expense_categories?.map((category : any) => (
+            <option value="">Select a Category</option>
+            {categoriesData?.events_expense_categories?.map((category: any) => (
               <option key={category.categoryId} value={category.categoryId}>
                 {category.categoryName}
               </option>
@@ -94,7 +128,6 @@ export default function AddExpenses({ params }: any) {
           </select>
         </div>
 
-      
         <button
           type="submit"
           disabled={createEventExpenseLoading}

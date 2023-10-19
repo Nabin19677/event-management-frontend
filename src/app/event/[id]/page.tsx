@@ -7,6 +7,7 @@ import Organizers from "./organizers";
 import Sessions from "./sessions";
 import { useState } from "react";
 import InviteModal from "@/components/modals/invite";
+import Expenses from "./expenses";
 
 export default function EventDetailPage({ params }: any) {
   const { id } = params;
@@ -22,7 +23,6 @@ export default function EventDetailPage({ params }: any) {
   if (loading) {
     return <>Loading...</>;
   }
-
 
   if (!data || !data.getEventDetail) {
     return <div>Not invited to this event.</div>;
@@ -56,14 +56,14 @@ export default function EventDetailPage({ params }: any) {
                     </Link>
                   )}
                   {detail.role === "Contributor" && (
-                     <button
-                     onClick={() => {
-                      setIsInviteModalOpen(true)
-                     }}
-                     className="hover:text-blue-600 cursor-pointer ml-4"
-                   >
-                     Invite
-                   </button>
+                    <button
+                      onClick={() => {
+                        setIsInviteModalOpen(true);
+                      }}
+                      className="hover:text-blue-600 cursor-pointer ml-4"
+                    >
+                      Invite
+                    </button>
                   )}
                 </h3>
               </div>
@@ -72,7 +72,6 @@ export default function EventDetailPage({ params }: any) {
                 {detail.event.name}
               </p>
               <p className="mt-3 text-gray-600">{detail.event.description}</p>
-             
             </div>
           </div>
         </div>
@@ -80,7 +79,11 @@ export default function EventDetailPage({ params }: any) {
 
       {detail.role === "Admin" && <Organizers eventId={id} />}
 
-      <Sessions eventId={id} role={detail.role}/>
+      <Sessions eventId={id} role={detail.role} />
+
+      {["Admin", "Contributor"].includes(detail.role) && (
+        <Expenses eventId={id} role={detail.role} />
+      )}
 
       <InviteModal
         isOpen={isInviteModalOpen}

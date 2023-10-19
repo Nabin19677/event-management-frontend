@@ -35,3 +35,37 @@ export const GET_EVENT_ORGANIZERS_BY_EVENT_QUERY = gql`
     }
   }
 `;
+
+export const ADD_EVENT_EXPENSE_MUTATION = gql`
+  mutation CreateEventExpense($eventId: Int!, $itemName : String!, $cost: Float!, $description: String!, $categoryId: Int!) {
+    createEventExpense(
+      eventId: $eventId
+      input: { 
+        eventId: $eventId, 
+        itemName: $itemName, 
+        cost: $cost, 
+        description: $description, 
+        categoryId: $categoryId
+      }
+    )
+  }
+`;
+
+export const GET_EVENT_EXPENSES_BY_CATEGORY_QUERY = gql`
+  query GetEventExpensesByCategory($eventId: Int!) {
+    getEventExpensesByCategory(eventId: $eventId) {
+      categoryName,
+      totalCost
+    }
+  }
+`;
+
+
+export const GET_EVENT_EXPENSES_CATEGORIES_QUERY = gql`
+  query GetEventExpensesCategories {
+    events_expense_categories {
+      categoryId,
+      categoryName
+    }
+  }
+`;
